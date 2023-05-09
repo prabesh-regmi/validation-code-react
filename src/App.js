@@ -6,7 +6,6 @@ function App({ length = 6 }) {
   const [code, setCode] = useState(new Array(length).fill(""));
   const [serverErrorMessage, setServerErrorMessage] = useState("");
   const [showLoading, setShowLoading] = useState(false);
-  showLoading;
   const [clientErrorMessage, setClientErrorMessage] = useState("");
   const inputsRef = useRef([]);
   const submitBtnRef = useRef(null);
