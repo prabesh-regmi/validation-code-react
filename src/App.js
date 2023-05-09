@@ -12,8 +12,8 @@ function App({ length = 6 }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:3030/api/verify");
-        console.log(response.data.message);
+        const response = await axios.get("https://codevalidation.onrender.com/api/verify");
+        console.log("Verification Number:", response.data.message);
       } catch (error) {
         console.error(error);
       }
@@ -70,7 +70,6 @@ function App({ length = 6 }) {
   const validateInput = () => {
     let valid = true;
     for (let i = 0; i < length; i++) {
-      console.log(i, code[i].length > 0);
       if (!code[i].length > 0) {
         inputsRef.current[i].classList.add("border-red-500");
         valid = false;
@@ -88,7 +87,6 @@ function App({ length = 6 }) {
 
   const handleSubmit = async () => {
     if (validateInput()) {
-      console.log(code?.join(""));
       const VerificationCode = JSON.stringify({ code: code.join("") });
       const customConfig = {
         headers: {
@@ -97,7 +95,7 @@ function App({ length = 6 }) {
       };
       await axios
         .post(
-          "http://localhost:3030/api/verify",
+          "https://codevalidation.onrender.com/api/verify",
           VerificationCode,
           customConfig
         )
@@ -109,7 +107,6 @@ function App({ length = 6 }) {
           }
         })
         .catch((error) => {
-          console.log("error", error.response.data.error);
           setServerErrorMessage(error.response.data.error);
         });
     } else {
@@ -117,44 +114,49 @@ function App({ length = 6 }) {
     }
   };
   return (
-    <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-      <div className="flex flex-col gap-4 items-center">
-        <h1 className="text-2xl font-bold">Verification code:</h1>
-        <div className="input-area w-[400px]">
-          <div className="flex justify-between gap-2">
-            {code.map((digit, index) => (
-              <input
-                key={index}
-                ref={(ref) => (inputsRef.current[index] = ref)}
-                type="text"
-                value={digit}
-                onChange={(e) => handleInputChange(e, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                onPaste={(e) => handlePaste(e, index)}
-                className={`border ${
-                  serverErrorMessage ? "border-red-500 " : "border-gray-500 "
-                }rounded-xl text-2xl w-full px-5 py-2 border-l-[3px] border-t-[3px]  focus:border-[#100249] focus:outline-none`}
-              />
-            ))}
+    <div>
+      <div className="text-center text-red-500 pt-4">
+        !! Check console for verification code !!
+      </div>
+      <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="flex flex-col gap-4 items-center">
+          <h1 className="text-2xl font-bold">Verification code:</h1>
+          <div className="input-area w-[400px]">
+            <div className="flex justify-between gap-2">
+              {code.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={(ref) => (inputsRef.current[index] = ref)}
+                  type="text"
+                  value={digit}
+                  onChange={(e) => handleInputChange(e, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  onPaste={(e) => handlePaste(e, index)}
+                  className={`border ${
+                    serverErrorMessage ? "border-red-500 " : "border-gray-500 "
+                  }rounded-xl text-2xl w-full px-5 py-2 border-l-[3px] border-t-[3px]  focus:border-[#100249] focus:outline-none`}
+                />
+              ))}
+            </div>
           </div>
+          {serverErrorMessage && (
+            <span className="inline-flex text-sm text-red-700">
+              {serverErrorMessage}
+            </span>
+          )}
+          {clientErrorMessage && (
+            <span className="inline-flex text-sm text-red-700">
+              {clientErrorMessage}
+            </span>
+          )}
+          <button
+            onClick={handleSubmit}
+            ref={submitBtnRef}
+            className="bg-[#100249] hover:bg-[#190370] uppercase text-white text-xl font-bold py-2 px-16 rounded-lg"
+          >
+            Submit
+          </button>
         </div>
-        {serverErrorMessage && (
-          <span className="inline-flex text-sm text-red-700">
-            {serverErrorMessage}
-          </span>
-        )}
-        {clientErrorMessage && (
-          <span className="inline-flex text-sm text-red-700">
-            {clientErrorMessage}
-          </span>
-        )}
-        <button
-          onClick={handleSubmit}
-          ref={submitBtnRef}
-          className="bg-[#100249] hover:bg-[#190370] uppercase text-white text-xl font-bold py-2 px-16 rounded-lg"
-        >
-          Submit
-        </button>
       </div>
     </div>
   );
