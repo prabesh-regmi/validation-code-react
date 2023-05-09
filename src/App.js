@@ -114,6 +114,7 @@ function App({ length = 6 }) {
         })
         .catch((error) => {
           setServerErrorMessage(error.response.data.error);
+          setShowLoading(false);
         });
     } else {
       setClientErrorMessage("Please inter 6 digit code");
