@@ -12,7 +12,7 @@ function App({ length = 6 }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://codevalidation.onrender.com/api/verify");
+        const response = await axios.get("https://codevalidation-api.onrender.com/api/verify");
         console.log("Verification Number:", response.data.message);
       } catch (error) {
         console.error(error);
@@ -95,7 +95,7 @@ function App({ length = 6 }) {
       };
       await axios
         .post(
-          "https://codevalidation.onrender.com/api/verify",
+          "https://codevalidation-api.onrender.com/api/verify",
           VerificationCode,
           customConfig
         )
